@@ -3,10 +3,33 @@ import pandas as pd
 from datetime import datetime
 
 st.set_page_config(page_title="Sistema Reseita", page_icon="💊", layout="wide")
+
+# --- LOGIN ---
+if "login" not in st.session_state:
+    st.session_state.login = None
+
+if st.session_state.login is None:
+    st.title("💊 SISTEMA RECEITA DIGITAL")
+    st.write("Doutór ba Farmasia | Dili, Timor-Leste")
+    user = st.selectbox("Hili Papel", ["Doutór", "Farmasia"])
+    senha = st.text_input("Senha", type="password")
+    if st.button("🔐 Tama Ba Sistema", use_container_width=True):
+        if (user=="Doutór" and senha=="1234") or (user=="Farmasia" and senha=="5678"):
+            st.session_state.login = user
+            st.rerun()
+        else:
+            st.error("Senha sala! Tenta fali.")
+    st.stop()
+
+# --- SAI ---
+st.sidebar.write(f"Tama hanesan: **{st.session_state.login}**")
+if st.sidebar.button("Sai / Logout"):
+    st.session_state.login = None
+    st.rerun()
+
 st.title("💊 Sistema Reseita Doutor - Farmasia")
 st.write("Doutor haruka reseita, Farmasia simu no fo remediu. La presiza papel!")
 
-# Guarda lista iha memoria
 if "reseitas" not in st.session_state:
     st.session_state.reseitas = []
 
@@ -37,7 +60,7 @@ with tab1:
                     "Remediu": remediu_final,
                     "Dosis": dosis,
                     "Instrusaun": instrusaun,
-                    "Status": "⏳ Hei Farmasia"
+                    "Status": "⏳ Haruka Husi Doutor"
                 })
                 st.success(f"Reseita {naran} haruka ona ba Farmasia!")
                 st.rerun()
@@ -57,12 +80,12 @@ with tab2:
                 st.write(f"**Instrusaun:** {r['Instrusaun']}")
                 col1, col2 = st.columns(2)
                 with col1:
-                    if st.button("✅ VERIFIED", key=f"v{i}", use_container_width=True):
-                        st.session_state.reseitas[i]["Status"] = "✅ Verified"
+                    if st.button("✅ VERIFIKA ONA", key=f"v{i}", use_container_width=True):
+                        st.session_state.reseitas[i]["Status"] = "✅ Verifika Ona"
                         st.rerun()
                 with col2:
-                    if st.button("💊 DISPENSED / FO ONA", key=f"d{i}", use_container_width=True):
-                        st.session_state.reseitas[i]["Status"] = "💊 Dispensed"
+                    if st.button("💊 FO AIMORUK ONA", key=f"d{i}", use_container_width=True):
+                        st.session_state.reseitas[i]["Status"] = "💊 Fo Aimoruk Ona"
                         st.rerun()
 
 # --- TAB LISTA ---
